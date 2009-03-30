@@ -5,7 +5,7 @@
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
 ?>
-<div class="interfaceBox">
+<div class="interfaceBox memberList">
 	<h1>Terms</h1>
 	<table>
 		<tr><th>Committee</th>

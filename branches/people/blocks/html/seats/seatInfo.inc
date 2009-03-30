@@ -20,29 +20,30 @@ echo "
 <div class=\"interfaceBox\">
 	<h1>$name</h1>
 	<table>
-	<tr><th>Appointed By</th>
-		<td>$appointer</td>
-	</tr>
-	<tr><th>Committee</th>
-		<td>$committee</td>
-	</tr>
-	<tr><th>Maximum Current Terms</th>
-		<td>{$this->seat->getMaxCurrentTerms()}</td></tr>
-	<tr><th>$editRequirementsButton
-			Requirements
-		</th>
-		<td>
+		<tr><th>Appointed By</th>
+			<td>$appointer</td>
+		</tr>
+		<tr><th>Committee</th>
+			<td>$committee</td>
+		</tr>
+		<tr><th>Maximum Current Terms</th>
+			<td>{$this->seat->getMaxCurrentTerms()}</td>
+		</tr>
+		<tr><th>$editRequirementsButton
+				Requirements
+			</th>
+			<td>
 ";
-			if ($this->seat->hasRequirements()) {
-				echo '<ul>';
-				foreach ($this->seat->getRequirements() as $requirement) {
-					echo '<li>'.View::escape($requirement).'</li>';
+				if ($this->seat->hasRequirements()) {
+					echo '<ul>';
+					foreach ($this->seat->getRequirements() as $requirement) {
+						echo '<li>'.View::escape($requirement).'</li>';
+					}
+					echo '</ul>';
 				}
-				echo '</ul>';
-			}
 echo "
-		</td>
-	</tr>
+			</td>
+		</tr>
 	</table>
 </div>
 ";

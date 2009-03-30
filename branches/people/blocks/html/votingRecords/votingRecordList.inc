@@ -6,7 +6,7 @@
  * @param Vote $this->vote
  */
 ?>
-<div class="interfaceBox">
+<div class="interfaceBox voteTable">
 	<h1><?php
 			echo View::escape($this->vote->getVoteType());
 			if (userHasRole(array('Administrator','Clerk'))) {

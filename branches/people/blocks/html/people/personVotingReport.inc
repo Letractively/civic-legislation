@@ -5,7 +5,7 @@
  * @param Person $this->person
  */
 ?>
-<div class="interfaceBox">
+<div class="interfaceBox memberVoteStats">
 	<h1>Position Stats</h1>
 	<table>
 		<?php
@@ -32,7 +32,7 @@
 	</table>
 </div>
 
-<div class="interfaceBox">
+<div class="interfaceBox memberVoteComparison">
 	<h1>Voting Comparison</h1>
 	<table>
 		<tr><th>Member</th><th>Percentage</th></tr>

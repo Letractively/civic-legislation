@@ -17,13 +17,15 @@ if (!$username && userHasRole('Administrator')) {
 
 $name = View::escape($this->person->getFullname());
 echo "
-<h1>$name</h1>
-<table>
-	<tr><th>Username</th>
-		<td>$username</td>
-	</tr>
-	<tr><th>Email</th>
-		<td>{$this->person->getEmail()}</td>
-	</tr>
-</table>
+<div id=\"personalInfo\">
+	<h1>$name</h1>
+	<table>
+		<tr><th>Username</th>
+			<td>$username</td>
+		</tr>
+		<tr><th>Email</th>
+			<td>{$this->person->getEmail()}</td>
+		</tr>
+	</table>
+</div>
 ";
