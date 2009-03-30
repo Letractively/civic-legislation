@@ -38,6 +38,7 @@ class Committee extends ActiveRecord
 							if ($value && $value!='0000-00-00') {
 								$this->dateFormed = strtotime($value);
 							}
+							break;
 						default:
 							$this->$field = $value;
 					}
@@ -172,9 +173,7 @@ class Committee extends ActiveRecord
 				return date($format,$this->dateFormed);
 			}
 		}
-		else {
-			return $this->dateFormed;
-		}
+		return $this->dateFormed;
 	}
 
 	/**
@@ -304,10 +303,17 @@ class Committee extends ActiveRecord
 	}
 
 	/**
+	 * Returns terms that were current for the given timestamp.
+	 * If no timestamp is given, the current time is used.
+	 *
+	 * @param timestamp $timestamp The timestamp for when the terms would have been current
 	 * @return TermList
 	 */
-	public function getCurrentTerms()
+	public function getCurrentTerms($timestamp=null)
 	{
-		return new TermList(array('committee_id'=>$this->id,'current'=>time()));
+		if (!$timestamp) {
+			$timestamp = time();
+		}
+		return new TermList(array('committee_id'=>$this->id,'current'=>$timestamp));
 	}
 }

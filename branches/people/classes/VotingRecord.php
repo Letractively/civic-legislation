@@ -43,7 +43,7 @@ class VotingRecord extends ActiveRecord
 			$this->position = 'absent';
 		}
 	}
-	
+
 	/**
 	 * Throws an exception if anything's wrong
 	 * @throws Exception $e
@@ -54,7 +54,7 @@ class VotingRecord extends ActiveRecord
 		if (!$this->term_id || !$this->vote_id) {
 			throw new Exception('missingRequiredFields');
 		}
-		
+
 		if (!$this->position) {
 			$this->position = 'absent';
 		}
@@ -252,5 +252,13 @@ class VotingRecord extends ActiveRecord
 	public static function getPossiblePositions()
 	{
 		return array('yes','no','abstain','absent');
+	}
+
+	/**
+	 * @return Person
+	 */
+	public function getPerson()
+	{
+		return $this->getTerm()->getPerson();
 	}
 }

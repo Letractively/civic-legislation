@@ -16,6 +16,7 @@ class Topic extends ActiveRecord
 
 	private $topicType;
 	private $committee;
+	private $tags = array();
 
 	/**
 	 * This will load all fields in the table as properties of this class.
@@ -54,7 +55,7 @@ class Topic extends ActiveRecord
 			$this->date = time();
 		}
 	}
-	
+
 	/**
 	 * Throws an exception if anything's wrong
 	 * @throws Exception $e
@@ -66,7 +67,7 @@ class Topic extends ActiveRecord
 			|| !$this->synopsis || !$this->committee_id) {
 			throw new Exception('missingRequiredFields');
 		}
-		
+
 		if (!$this->date) {
 			$this->date = time();
 		}

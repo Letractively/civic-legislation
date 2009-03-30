@@ -34,7 +34,15 @@ class Vote extends ActiveRecord
 			}
 			foreach ($result[0] as $field=>$value) {
 				if ($value) {
-					$this->$field = $value;
+					switch ($field) {
+						case 'date':
+							if ($value && $value!='0000-00-00') {
+								$this->date = strtotime($value);
+							}
+							break;
+						default:
+							$this->$field = $value;
+					}
 				}
 			}
 		}
@@ -44,7 +52,7 @@ class Vote extends ActiveRecord
 			$this->date = time();
 		}
 	}
-	
+
 	/**
 	 * Throws an exception if anything's wrong
 	 * @throws Exception $e
@@ -302,20 +310,26 @@ class Vote extends ActiveRecord
 	 * no result is given, it returns the full list
 	 * @return VotingRecordList
 	 */
-	public function getVotingRecords($memberVote=null)
+	public function getVotingRecords($position=null)
 	{
-		if ($this->id)
-		{
+		if ($this->id) {
 			$fields = array('vote_id'=>$this->id);
-			if ($memberVote) { $fields['memberVote'] = $memberVote; }
+			if ($position) { $fields['position'] = $position; }
 			return new VotingRecordList($fields);
 		}
-		else return array();
+		return array();
 	}
-	public function hasVotingRecords() { return count($this->getVotingRecords()) ? true : false; }
 
 	/**
-	 * @param array $records A POST array of records with member_id as the index
+	 * @return boolean
+	 */
+	public function hasVotingRecords()
+	{
+		return count($this->getVotingRecords()) ? true : false;
+	}
+
+	/**
+	 * @param array $records A POST array of records with term_id as the index
 	 */
 	public function setVotingRecords(array $records)
 	{
@@ -324,10 +338,9 @@ class Vote extends ActiveRecord
 		$query = $PDO->prepare('delete from votingRecords where vote_id=?');
 		$query->execute(array($this->id));
 
-		$query = $PDO->prepare('insert votingRecords set vote_id=?,member_id=?,memberVote=?');
-		foreach ($records as $member_id=>$memberVote)
-		{
-			$query->execute(array($this->id,$member_id,$memberVote));
+		$query = $PDO->prepare('insert votingRecords set vote_id=?,term_id=?,position=?');
+		foreach ($records as $term_id=>$position) {
+			$query->execute(array($this->id,$term_id,$position));
 		}
 	}
 
@@ -345,4 +358,14 @@ class Vote extends ActiveRecord
 	public function getCommittee()
 	{
 		return $this->getTopic()->getCommittee();
-	}}
+	}
+
+	/**
+	 * Returns the terms that were current during the time of this vote
+	 * @return TermList
+	 */
+	public function getTerms()
+	{
+		return $this->getCommittee()->getCurrentTerms($this->date);
+	}
+}
