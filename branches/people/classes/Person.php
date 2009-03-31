@@ -575,13 +575,21 @@ class Person extends ActiveRecord
 	 */
 	public function getPeers()
 	{
+		$peers = array();
+
 		$committees = array();
 		foreach ($this->getCommittees() as $committee) {
 			$committees[] = $committee->getId();
 		}
 		if (count($committees)) {
-			return new PersonList(array('committee_id'=>$committees));
+			$list = new PersonList(array('committee_id'=>$committees));
+			foreach ($list as $person) {
+				if ($person->getId() != $this->id) {
+					$peers[] = $person;
+				}
+			}
 		}
+		return $peers;
 	}
 
 	/**
@@ -646,5 +654,14 @@ class Person extends ActiveRecord
 	public function getAccordancePercentage($otherPerson,TopicList $topicList=null)
 	{
 		return VotingRecordList::findAccordancePercentage($this,$otherPerson,$topicList);
+	}
+
+	/**
+	 * Returns all the topics this person has voted on
+	 * @return TopicList
+	 */
+	public function getTopics()
+	{
+		return new TopicList(array('person_id'=>$this->id));
 	}
 }

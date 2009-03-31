@@ -111,10 +111,12 @@ class PersonList extends PDOResultIterator
 		// You can add fields from other tables to $options by adding the join SQL
 		// to $this->joins here
 		if (isset($fields['committee_id'])) {
-			$this->joins.= ' left join seats s on p.id=s.seat_id';
+			$this->joins.= ' left join terms t on p.id=t.person_id';
+			$this->joins.= ' left join seats s on t.seat_id=s.id';
 
 			if (is_array($fields['committee_id'])) {
-				$options[] = "s.committee_id in ($fields[committee_id])";
+				$committees = implode(',',$fields['committee_id']);
+				$options[] = "s.committee_id in ($committees)";
 			}
 			else {
 				$options[] = 's.committee_id=?';

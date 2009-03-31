@@ -13,8 +13,9 @@ $template->blocks[] = new Block('people/personInfo.inc',array('person'=>$person)
 
 $terms = $person->getTerms();
 if (count($terms)) {
-	$template->blocks[] = new Block('tersm/termList.inc',array('termList'=>$terms));
+	$template->blocks[] = new Block('terms/termList.inc',array('termList'=>$terms));
+	$template->blocks[] = new Block('people/personVotingReport.inc',array('person'=>$person));
+	$template->blocks[] = new Block('people/votingRecord.inc',array('person'=>$person));
 }
-
 
 echo $template->render();
