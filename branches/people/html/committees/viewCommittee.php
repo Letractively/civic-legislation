@@ -22,8 +22,14 @@ if ($template->outputFormat == 'html') {
 
 	$topics = $committee->getTopics();
 	if (count($topics)) {
-		$votingComparison = new Block('topics/votingRecordComparison.inc');
+		$people = array();
+		foreach($committee->getCurrentTerms() as $term) {
+			$people[] = $term->getPerson();
+		}
+
+		$votingComparison = new Block('votingRecords/votingRecordComparison.inc');
 		$votingComparison->topicList = $topics;
+		$votingComparison->people = $people;
 		$template->blocks[] = $votingComparison;
 
 		$template->blocks[] = new Block('topics/tagCloud.inc',array('topicList'=>$topics));
