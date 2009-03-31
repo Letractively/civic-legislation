@@ -316,4 +316,22 @@ class Committee extends ActiveRecord
 		}
 		return new TermList(array('committee_id'=>$this->id,'current'=>$timestamp));
 	}
+
+	/**
+	 * Returns all the terms for this committee
+	 * @return TermList
+	 */
+	public function getTerms()
+	{
+		return new TermList(array('committee_id'=>$this->id));
+	}
+
+	/**
+	 * Returns all the people who have served on this committee
+	 * @return PeopleList
+	 */
+	public function getPeople()
+	{
+		return new PersonList(array('committee_id'=>$this->id));
+	}
 }

@@ -565,9 +565,13 @@ class Person extends ActiveRecord
 	/**
 	 * @return TermList
 	 */
-	public function getTerms()
+	public function getTerms($fields=null)
 	{
-		return new TermList(array('person_id'=>$this->id));
+		$search = array('person_id'=>$this->id);
+		if (is_array($fields)) {
+			$search = array_merge($search,$fields);
+		}
+		return new TermList($search);
 	}
 
 	/**

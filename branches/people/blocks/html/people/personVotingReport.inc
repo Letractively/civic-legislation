@@ -6,7 +6,7 @@
  */
 ?>
 <div class="interfaceBox memberVoteStats">
-	<h1>Position Stats</h1>
+	<h1>Voting Stats</h1>
 	<table>
 		<?php
 			echo "<tr><th>Legislation</th>";

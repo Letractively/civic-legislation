@@ -119,7 +119,7 @@ class PersonList extends PDOResultIterator
 				$options[] = "s.committee_id in ($committees)";
 			}
 			else {
-				$options[] = 's.committee_id=?';
+				$options[] = 's.committee_id=:committee_id';
 				$parameters[':committee_id'] = $fields['committee_id'];
 			}
 		}
