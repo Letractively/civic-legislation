@@ -117,8 +117,18 @@ create table terms (
 	person_id int unsigned not null,
 	term_start date,
 	term_end date,
-	title varchar(128),
 	foreign key (seat_id) references seats(id),
+	foreign key (person_id) references people(id)
+) engine=InnoDB;
+
+create table officers (
+	id int unsigned not null primary key auto_increment,
+	committee_id int unsigned not null,
+	person_id int unsigned not null,
+	title varchar(128) not null,
+	startDate date not null,
+	endDate date,
+	foreign key (committee_id) references committees(id),
 	foreign key (person_id) references people(id)
 ) engine=InnoDB;
 

@@ -23,10 +23,6 @@
 				<td><input name="term[term_end]" id="term-term_end" onfocus="FRAMEWORK.popupCalendar(this);" />
 				</td>
 			</tr>
-			<tr><td><label for="term-title">Title</label></td>
-				<td><input name="term[title]" id="term-title" /></td>
-			</tr>
-
 		</table>
 
 		<button type="submit" class="submit">Submit</button>

@@ -668,4 +668,22 @@ class Person extends ActiveRecord
 	{
 		return new TopicList(array('person_id'=>$this->id));
 	}
+
+	/**
+	 * Returns the offices held for the given committee
+	 * If a timestamp is given, it will return only offices held on the date of the timestamp
+	 *
+	 * @return OfficerList
+	 */
+	public function getOffices(Committee $committee=null,$timestamp=null)
+	{
+		$search = array('person_id'=>$this->id);
+		if ($committee) {
+			$search['committee_id'] = $committee->getId();
+		}
+		if ($timestamp) {
+			$search['current'] = $timestamp;
+		}
+		return new OfficerList($search);
+	}
 }

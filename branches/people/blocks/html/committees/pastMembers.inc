@@ -25,9 +25,16 @@
 				$earliestStart = date('n/j/Y',$earliestStart);
 				$latestEnd = date('n/j/Y',$latestEnd);
 
+				$offices = array();
+				foreach ($person->getOffices($this->committee) as $office) {
+					$offices[] = View::escape($office->getTitle());
+				}
+				$offices = implode(',',$offices);
+
 				echo "
 				<tr><td><a href=\"{$term->getPerson()->getURL()}\">$fullname</a></td>
 					<td>$earliestStart - $latestEnd</td>
+					<td>$offices</td>
 				</tr>
 				";
 			}

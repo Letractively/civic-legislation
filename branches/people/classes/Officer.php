@@ -4,15 +4,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  */
-class Term extends ActiveRecord
+class Officer extends ActiveRecord
 {
 	private $id;
-	private $seat_id;
+	private $committee_id;
 	private $person_id;
-	private $term_start;
-	private $term_end;
+	private $title;
+	private $startDate;
+	private $endDate;
 
-	private $seat;
+	private $committee;
 	private $person;
 
 	/**
@@ -25,23 +26,22 @@ class Term extends ActiveRecord
 	{
 		if ($id) {
 			$PDO = Database::getConnection();
-			$query = $PDO->prepare('select * from terms where id=?');
+			$query = $PDO->prepare('select * from officers where id=?');
 			$query->execute(array($id));
 
 			$result = $query->fetchAll(PDO::FETCH_ASSOC);
 			if (!count($result)) {
-				throw new Exception('terms/unknownTerm');
+				throw new Exception('officers/unknownOfficer');
 			}
 			foreach ($result[0] as $field=>$value) {
 				if ($value) {
 					switch ($field) {
-						case 'term_start':
-						case 'term_end':
+						case 'startDate':
+						case 'endDate':
 							if ($value && $value!='0000-00-00') {
 								$this->$field = strtotime($value);
 							}
 							break;
-
 						default:
 							$this->$field = $value;
 					}
@@ -51,7 +51,7 @@ class Term extends ActiveRecord
 		else {
 			// This is where the code goes to generate a new, empty instance.
 			// Set any default values for properties that need it here
-			$this->term_start = time();
+			$this->startDate = time();
 		}
 	}
 
@@ -62,29 +62,17 @@ class Term extends ActiveRecord
 	public function validate()
 	{
 		// Check for required fields here.  Throw an exception if anything is missing.
-		if (!$this->seat_id || !$this->person_id) {
+		if (!$this->committee_id || !$this->person_id) {
 			throw new Exception('missingRequiredFields');
 		}
 
-		if (!$this->term_start) {
-			$this->term_start = time();
+		if (!$this->title) {
+			throw new Exception('officers/missingTitle');
 		}
 
 		// Make sure the end date falls after the start date
-		if ($this->term_end && $this->term_end < $this->term_start) {
+		if ($this->endDate && $this->endDate < $this->startDate) {
 			throw new Exception('terms/invalidEndDate');
-		}
-
-		// Make sure this term does not exceed the maxCurrentTerms for the seat
-		if ( $this->term_start <= time() && (!$this->term_end || $this->term_end >= time()) ) {
-			// The term we're adding is current, make sure there's room
-			$count = count($this->getSeat()->getCurrentTerms());
-			if (!$this->id) {
-				$count++;
-			}
-			if ($count > $this->getSeat()->getMaxCurrentTerms()) {
-				throw new Exception('seats/maxCurrentTermsFilled');
-			}
 		}
 	}
 
@@ -100,10 +88,11 @@ class Term extends ActiveRecord
 		$this->validate();
 
 		$fields = array();
-		$fields['seat_id'] = $this->seat_id;
+		$fields['committee_id'] = $this->committee_id;
 		$fields['person_id'] = $this->person_id;
-		$fields['term_start'] = date('Y-m-d',$this->term_start);
-		$fields['term_end'] = $this->term_end ? date('Y-m-d',$this->term_end) : null;
+		$fields['title'] = $this->title;
+		$fields['startDate'] = date('Y-m-d',$this->startDate);
+		$fields['endDate'] = $this->endDate ? date('Y-m-d',$this->endDate) : null;
 
 		// Split the fields up into a preparedFields array and a values array.
 		// PDO->execute cannot take an associative array for values, so we have
@@ -128,7 +117,7 @@ class Term extends ActiveRecord
 	{
 		$PDO = Database::getConnection();
 
-		$sql = "update terms set $preparedFields where id={$this->id}";
+		$sql = "update officers set $preparedFields where id={$this->id}";
 		$query = $PDO->prepare($sql);
 		$query->execute($values);
 	}
@@ -137,26 +126,10 @@ class Term extends ActiveRecord
 	{
 		$PDO = Database::getConnection();
 
-		$sql = "insert terms set $preparedFields";
+		$sql = "insert officers set $preparedFields";
 		$query = $PDO->prepare($sql);
 		$query->execute($values);
 		$this->id = $PDO->lastInsertID();
-	}
-
-	/**
-	 * Wipes all records of this term from the database
-	 */
-	public function delete()
-	{
-		if ($this->id) {
-			$pdo = Database::getConnection();
-
-			$query = $pdo->prepare('delete from votingRecords where term_id=?');
-			$query->execute(array($this->id));
-
-			$query = $pdo->prepare('delete from terms where id=?');
-			$query->execute(array($this->id));
-		}
 	}
 
 	//----------------------------------------------------------------
@@ -174,9 +147,9 @@ class Term extends ActiveRecord
 	/**
 	 * @return int
 	 */
-	public function getSeat_id()
+	public function getCommittee_id()
 	{
-		return $this->seat_id;
+		return $this->committee_id;
 	}
 
 	/**
@@ -188,23 +161,31 @@ class Term extends ActiveRecord
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+	/**
 	 * Returns the date/time in the desired format
 	 * Format can be specified using either the strftime() or the date() syntax
 	 *
 	 * @param string $format
 	 */
-	public function getTerm_start($format=null)
+	public function getStartDate($format=null)
 	{
-		if ($format && $this->term_start) {
+		if ($format && $this->startDate) {
 			if (strpos($format,'%')!==false) {
-				return strftime($format,$this->term_start);
+				return strftime($format,$this->startDate);
 			}
 			else {
-				return date($format,$this->term_start);
+				return date($format,$this->startDate);
 			}
 		}
 		else {
-			return $this->term_start;
+			return $this->startDate;
 		}
 	}
 
@@ -214,31 +195,31 @@ class Term extends ActiveRecord
 	 *
 	 * @param string $format
 	 */
-	public function getTerm_end($format=null)
+	public function getEndDate($format=null)
 	{
-		if ($format && $this->term_end) {
+		if ($format && $this->endDate) {
 			if (strpos($format,'%')!==false) {
-				return strftime($format,$this->term_end);
+				return strftime($format,$this->endDate);
 			}
 			else {
-				return date($format,$this->term_end);
+				return date($format,$this->endDate);
 			}
 		}
 		else {
-			return $this->term_end;
+			return $this->endDate;
 		}
 	}
 
 	/**
-	 * @return Seat
+	 * @return Committee
 	 */
-	public function getSeat()
+	public function getCommittee()
 	{
-		if ($this->seat_id) {
-			if (!$this->seat) {
-				$this->seat = new Seat($this->seat_id);
+		if ($this->committee_id) {
+			if (!$this->committee) {
+				$this->committee = new Committee($this->committee_id);
 			}
-			return $this->seat;
+			return $this->committee;
 		}
 		return null;
 	}
@@ -264,10 +245,10 @@ class Term extends ActiveRecord
 	/**
 	 * @param int $int
 	 */
-	public function setSeat_id($int)
+	public function setCommittee_id($int)
 	{
-		$this->seat = new Seat($int);
-		$this->seat_id = $int;
+		$this->committee = new Committee($int);
+		$this->committee_id = $int;
 	}
 
 	/**
@@ -280,6 +261,14 @@ class Term extends ActiveRecord
 	}
 
 	/**
+	 * @param string $string
+	 */
+	public function setTitle($string)
+	{
+		$this->title = trim($string);
+	}
+
+	/**
 	 * Sets the date
 	 *
 	 * Dates and times should be stored as timestamps internally.
@@ -290,16 +279,16 @@ class Term extends ActiveRecord
 	 *		string - anything strtotime understands
 	 * @param date $date
 	 */
-	public function setTerm_start($date)
+	public function setStartDate($date)
 	{
 		if (is_array($date)) {
-			$this->term_start = $this->dateArrayToTimestamp($date);
+			$this->startDate = $this->dateArrayToTimestamp($date);
 		}
 		elseif (ctype_digit($date)) {
-			$this->term_start = $date;
+			$this->startDate = $date;
 		}
 		else {
-			$this->term_start = strtotime($date);
+			$this->startDate = strtotime($date);
 		}
 	}
 
@@ -314,26 +303,26 @@ class Term extends ActiveRecord
 	 *		string - anything strtotime understands
 	 * @param date $date
 	 */
-	public function setTerm_end($date)
+	public function setEndDate($date)
 	{
 		if (is_array($date)) {
-			$this->term_end = $this->dateArrayToTimestamp($date);
+			$this->endDate = $this->dateArrayToTimestamp($date);
 		}
 		elseif (ctype_digit($date)) {
-			$this->term_end = $date;
+			$this->endDate = $date;
 		}
 		else {
-			$this->term_end = strtotime($date);
+			$this->endDate = strtotime($date);
 		}
 	}
 
 	/**
-	 * @param Seat $seat
+	 * @param Committee $committee
 	 */
-	public function setSeat($seat)
+	public function setCommittee($committee)
 	{
-		$this->seat_id = $seat->getId();
-		$this->seat = $seat;
+		$this->committee_id = $committee->getId();
+		$this->committee = $committee;
 	}
 
 	/**
@@ -350,12 +339,4 @@ class Term extends ActiveRecord
 	// Custom Functions
 	// We recommend adding all your custom code down here at the bottom
 	//----------------------------------------------------------------
-
-	/**
-	 * @return Committee
-	 */
-	public function getCommittee()
-	{
-		return $this->getSeat()->getCommittee();
-	}
 }

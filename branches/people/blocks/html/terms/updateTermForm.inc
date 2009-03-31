@@ -21,10 +21,6 @@
 				<td><input name="term[term_end]" id="term-term_end" value="<?php echo $this->term->getTerm_end('n/j/Y'); ?>" onfocus="FRAMEWORK.popupCalendar(this);" />
 				</td>
 			</tr>
-			<tr><td><label for="term-title">Title</label></td>
-				<td><input name="term[title]" id="term-title" value="<?php echo View::escape($this->term->getTitle()); ?>" />
-				</td>
-			</tr>
 		</table>
 
 		<button type="submit" class="submit">Submit</button>

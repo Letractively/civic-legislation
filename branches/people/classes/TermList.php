@@ -77,11 +77,6 @@ class TermList extends PDOResultIterator
 			$parameters[':term_end'] = $fields['term_end'];
 		}
 
-		if (isset($fields['title'])) {
-			$options[] = 't.title=:title';
-			$parameters[':title'] = $fields['title'];
-		}
-
 		if (isset($fields['current'])) {
 			$date = date('Y-m-d H:i:s',$fields['current']);
 

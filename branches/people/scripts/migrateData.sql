@@ -23,7 +23,7 @@ delete from seats;
 insert seats select * from committee_manager.seats;
 insert seat_requirements select * from committee_manager.seat_requirements;
 
-insert terms select *,null from committee_manager.members;
+insert terms select * from committee_manager.members;
 
 delete from topicTypes;
 insert topicTypes select * from committee_manager.topicTypes;
