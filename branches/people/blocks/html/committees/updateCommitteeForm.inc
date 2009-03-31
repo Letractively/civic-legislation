@@ -6,7 +6,7 @@
  */
 $fields = array('name','statutoryName','statuteReference','website','description');
 foreach ($fields as $field) {
-	$getter = 'get'.ucfirst($fields);
+	$getter = 'get'.ucfirst($field);
 	$$field = View::escape($this->committee->$getter());
 }
 ?>
