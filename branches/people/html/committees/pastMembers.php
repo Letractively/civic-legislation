@@ -11,5 +11,7 @@ $template = new Template();
 $template->title = 'Past Members for '.$committee->getName();
 $template->blocks[] = new Block('committees/breadcrumbs.inc',array('committee'=>$committee));
 $template->blocks[] = new Block('committees/committeeInfo.inc',array('committee'=>$committee));
+$template->blocks[] = new Block('committees/tabs.inc',
+								array('committee'=>$committee,'currentTab'=>'members'));
 $template->blocks[] = new Block('committees/pastMembers.inc',array('committee'=>$committee));
 echo $template->render();

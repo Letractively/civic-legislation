@@ -14,13 +14,25 @@ $template->title = $committee->getName();
 if ($template->outputFormat == 'html') {
 	$template->blocks[] = new Block('committees/breadcrumbs.inc',array('committee'=>$committee));
 }
-
 $template->blocks[] = new Block('committees/committeeInfo.inc',array('committee'=>$committee));
 
 if ($template->outputFormat == 'html') {
 	$template->blocks[] = new Block('committees/tabs.inc',
-								array('committee'=>$committee,'currentTab'=>'members'));
-	$template->blocks[] = new Block('committees/currentTerms.inc',array('committee'=>$committee));
+								array('committee'=>$committee,'currentTab'=>'votes'));
+
+	$topics = $committee->getTopics();
+	if (count($topics)) {
+		$people = array();
+		foreach($committee->getCurrentTerms() as $term) {
+			$people[] = $term->getPerson();
+		}
+
+		$votingComparison = new Block('votingRecords/votingRecordComparison.inc');
+		$votingComparison->topicList = $topics;
+		$votingComparison->people = $people;
+		$template->blocks[] = $votingComparison;
+
+	}
 }
 
 echo $template->render();
