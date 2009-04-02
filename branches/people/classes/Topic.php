@@ -351,6 +351,19 @@ class Topic extends ActiveRecord
 	}
 
 	/**
+	 * @return VotingRecordList
+	 */
+	public function getLatestVotingRecords()
+	{
+		$votes = $this->getVotes();
+		if (count($votes)) {
+			$latestVote = $votes[0];
+			return $latestVote->getVotingRecords();
+		}
+		return array();
+	}
+
+	/**
 	 * @return array An array of Tag Objects with the tag_id as the index
 	 */
 	public function getTags()

@@ -34,12 +34,26 @@ if (count($this->topicList) || $userCanEdit) {
 			$date = $topic->getDate('n/j/Y');
 			$description = View::escape($topic->getDescription());
 			$synopsis = View::escape($topic->getSynopsis());
+
+			$votingRecords = array();
+			if ($topic->hasVotes()) {
+				foreach ($topic->getLatestVotingRecords() as $vote) {
+					$name = View::escape($vote->getPerson()->getLastname());
+					$name = "<a href=\"{$vote->getPerson()->getURL()}\">$name</a>";
+					$votingRecords[] = "$name:{$vote->getPosition()}";
+				}
+			}
+			$votingRecords = implode(', ',$votingRecords);
+
 			echo "
 			<div class=\"topic\">
 				<h3>$editButton <a href=\"{$topic->getURL()}\">$number</a> $date</h3>
 				<p>$description</p>
-			</div>
 			";
+			if ($votingRecords) {
+				echo "<div>$votingRecords</div>";
+			}
+			echo "</div>";
 		}
 	echo "
 	</div>
