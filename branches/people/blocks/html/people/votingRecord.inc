@@ -15,6 +15,16 @@ if ($this->person->hasVotingRecord()) {
 		$number = View::escape($record->getTopic()->getNumber());
 		$date = $record->getDate('n/j/Y');
 		$description = View::escape($record->getTopic()->getDescription());
+
+
+		$votingRecords = array();
+		foreach ($record->getTopic()->getLatestVotingRecords() as $vote) {
+			$name = View::escape($vote->getPerson()->getLastname());
+			$name = "<a href=\"{$vote->getPerson()->getURL()}\">$name</a>";
+			$votingRecords[] = "$name:{$vote->getPosition()}";
+		}
+		$votingRecords = implode(', ',$votingRecords);
+
 		echo "
 		<div class=\"topic\">
 			<h3><strong>$position</strong> on
@@ -22,8 +32,11 @@ if ($this->person->hasVotingRecord()) {
 				$date
 			</h3>
 			<p>$description</p>
-		</div>
 		";
+		if($votingRecords) {
+			echo "<div>$votingRecords</div>";
+		}
+		echo "</div>";
 	}
 	echo "</div>";
 }

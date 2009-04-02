@@ -28,7 +28,7 @@ class CommitteeList extends PDOResultIterator
 	 */
 	public function __construct($fields=null)
 	{
-		$this->select = 'select c.id as id from committees c';
+		$this->select = 'select distinct c.id as id from committees c';
 		if (is_array($fields)) {
 			$this->find($fields);
 		}
