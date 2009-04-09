@@ -47,7 +47,7 @@ if (count($this->topicList) || $userCanEdit) {
 
 			echo "
 			<div class=\"topic\">
-				<h3>$editButton <a href=\"{$topic->getURL()}\">$number</a> $date</h3>
+				<h3>$editButton <a href=\"{$topic->getURL()}\">$number</a> <span style=\"font-size:.8em;\"> $date</span></h3>
 				<p>$description</p>
 			";
 			if ($votingRecords) {

@@ -30,7 +30,7 @@ if ($tags) {
 }
 
 echo "
-<div class=\"interfaceBox\">
+<div class=\"interfaceBox legislation\">
 	<h1>$editButton
 		<a href=\"{$this->topic->getURL()}\">$type $number ($date)</a>
 	</h1>

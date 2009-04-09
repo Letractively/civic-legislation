@@ -16,10 +16,11 @@ if (!$username && userHasRole('Administrator')) {
 
 
 $name = View::escape($this->person->getFullname());
+$about = nl2br(View::escape($this->person->getAbout()));
 echo "
 <div id=\"personalInfo\">
 	<h1>$name</h1>
-	<table>
+	<table class=\"memberTable\">
 ";
 	if ($this->person->getEmail()) {
 		echo "<tr><th>Email</th><td>{$this->person->getEmail()}</td></tr>";
@@ -46,9 +47,9 @@ echo "
 	if ($committees) {
 		echo "<tr><th>Committees</th><td>$committees</td></tr>";
 	}
-$about = nl2br(View::escape($this->person->getAbout()));
+
 echo "
 	</table>
-	<div>$about</div>
+	<p class=\"memberDescription\">$about</p>
 </div>
 ";

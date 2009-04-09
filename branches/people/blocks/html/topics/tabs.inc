@@ -6,9 +6,8 @@
  * @param Committee $this->committee
  * @param string $this->currentTab
  */
-$tabs = array('members'=>$this->committee->getURL(),
-			  'topics'=>BASE_URL.'/committees/topics.php?committee_id='.$this->committee->getId(),
-			  'votes'=>BASE_URL.'/committees/votes.php?committee_id='.$this->committee->getId());
+$tabs = array('legislation'=>$this->topic->getURL(),
+			  'votes'=>BASE_URL.'/topics/votes.php?topic_id='.$this->topic->getId());
 ?>
 <div class="tabBar">
 	<ul>

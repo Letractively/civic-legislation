@@ -12,11 +12,9 @@ $statuteReference = View::escape($this->committee->getStatuteReference());
 $description = View::escape($this->committee->getDescription());
 
 echo "
-<div id=\"committeeDescription\">
-	<h1><a href=\"{$this->committee->getURL()}\">$name</a></h1>
-	<p>$description</p>
-</div>
-<div id=\committeeinfo\">
+<h1><a href=\"{$this->committee->getURL()}\">$name</a></h1>
+
+<div id=\"committeeInfo\">
 	<table>
 		<tr><th>Date Formed</th>
 			<td>{$this->committee->getDateFormed('n/j/Y')}</td>
@@ -31,5 +29,8 @@ echo "
 			<td><a href=\"{$this->committee->getWebsite()}\">View Homepage</a></td>
 		</tr>
 	</table>
+</div>
+<div id=\"committeeDescription\">
+	<p>$description</p>
 </div>
 ";

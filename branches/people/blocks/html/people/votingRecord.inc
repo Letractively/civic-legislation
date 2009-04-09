@@ -7,7 +7,7 @@
  */
 if ($this->person->hasVotingRecord()) {
 	echo "
-	<div class=\"interfaceBox legislation\">
+	<div class=\"interfaceBox memberVR\">
 		<h1>Voting Record</h1>
 	";
 	foreach ($this->person->getVotingRecords() as $record) {
@@ -29,7 +29,7 @@ if ($this->person->hasVotingRecord()) {
 		<div class=\"topic\">
 			<h3><strong>$position</strong> on
 				<a href=\"{$record->getTopic()->getURL()}\">$number</a>
-				$date
+				<span style=\"font-size:.8em;\">$date</span>
 			</h3>
 			<p>$description</p>
 		";

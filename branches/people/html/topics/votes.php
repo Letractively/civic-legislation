@@ -15,9 +15,18 @@ $template->blocks[] = new Block('committees/committeeInfo.inc',
 
 if ($template->outputFormat == 'html') {
 	$template->blocks[] = new Block('topics/tabs.inc',
-								array('topic'=>$topic,'currentTab'=>'legislation'));
-	$template->blocks[] = new Block('topics/topicInfo.inc',array('topic'=>$topic));
-}
+								array('topic'=>$topic,'currentTab'=>'votes'));
 
+$votes = new Block('votes/voteList.inc');
+$votes->voteList = $topic->getVotes();
+$votes->topic = $topic;
+$template->blocks[] = $votes;
+
+foreach ($topic->getVotes() as $vote) {
+	$records = new Block('votingRecords/votingRecordList.inc');
+	$records->vote = $vote;
+	$template->blocks[] = $records;
+}
+}
 
 echo $template->render();
