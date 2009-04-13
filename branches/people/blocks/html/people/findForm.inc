@@ -43,15 +43,6 @@
 				<h1>Results</h1>
 				<table>
 			";
-				foreach ($personList as $person) {
-					$name = View::escape($person->getFullname());
-					$committees = array();
-					foreach ($person->getCommittees() as $committee) {
-						$committees[] = $committee->getName();
-					}
-					$committees = View::escape(implode(', ',$committees));
-				}
-
 				// Add all the new parameters onto the return_url we were passed
 				$url = new URL($this->return_url);
 				foreach ($this->vars as $field=>$value) {
@@ -59,11 +50,24 @@
 						$url->$field = $value;
 					}
 				}
-				$url->person_id = $person->getId();
-			echo "
+
+				foreach ($personList as $person) {
+					$url->person_id = $person->getId();
+
+					$name = View::escape($person->getFullname());
+					$committees = array();
+					foreach ($person->getCommittees() as $committee) {
+						$committees[] = $committee->getName();
+					}
+					$committees = View::escape(implode(', ',$committees));
+					echo "
 					<tr><td><a href=\"$url\">$name</a></td>
 						<td>$committees</td>
 					</tr>
+					";
+				}
+
+			echo "
 				</table>
 			</div>
 			";

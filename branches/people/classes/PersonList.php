@@ -155,12 +155,12 @@ class PersonList extends PDOResultIterator
 		$options = array();
 		$parameters = array();
 
-		if (isset($fields['firstname'])) {
+		if (isset($fields['firstname']) && $fields['firstname']) {
 			$options[] = 'firstname like :firstname';
 			$parameters[':firstname'] = "$fields[firstname]%";
 		}
 
-		if (isset($fields['lastname'])) {
+		if (isset($fields['lastname']) && $fields['lastname']) {
 			$options[] = 'lastname like :lastname';
 			$parameters[':lastname'] = "$fields[lastname]%";
 		}
