@@ -8,7 +8,7 @@
 $userIsAdmin = userHasRole(array('Administrator','Clerk'));
 ?>
 <div class="interfaceBox seats">
-	<h1>Members</h1>
+	<h1>Current Members</h1>
 	<table>
 		<tr><th>Name</th>
 			<th>Appointed By</th>
