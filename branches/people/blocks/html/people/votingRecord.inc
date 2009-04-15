@@ -27,9 +27,9 @@ if ($this->person->hasVotingRecord()) {
 
 		echo "
 		<div class=\"topic\">
-			<h3><strong>$position</strong> on
-				<a href=\"{$record->getTopic()->getURL()}\">$number</a>
-				<span style=\"font-size:.8em;\">$date</span>
+			<h3><span class=\"position\">$position</span> on
+				<a href=\"{$record->getTopic()->getURL()}\" class=\"number\">$number</a>
+				<span class=\"date\">$date</span>
 			</h3>
 			<p>$description</p>
 		";
