@@ -25,12 +25,23 @@ echo "
 	foreach ($this->person->getCommittees() as $committee) {
 		$name = View::escape($committee->getName());
 		$name = "<a href=\"{$committee->getURL()}\">$name</a>";
+
+		$appointers = array();
+		foreach ($this->person->getAppointers($committee) as $appointer) {
+			$appointers[] = View::escape($appointer);
+		}
+		$appointers = implode(', ',$appointers);
+
+
 		$offices = $this->person->getOffices($committee);
 		if (count($offices)) {
-			$title = View::escape($offices[0]->getTitle());
-			$name = "$name ($title)";
+			$office = View::escape($offices[0]->getTitle());
+			$office = "($office)";
 		}
-		$committees[] = $name;
+		else {
+			$office = '';
+		}
+		$committees[] = "$name-$appointers $office";
 	}
 	$committees = implode(', ',$committees);
 	if ($committees) {

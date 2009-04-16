@@ -691,4 +691,19 @@ class Person extends ActiveRecord
 		}
 		return new OfficerList($search);
 	}
+
+	/**
+	 * Returns all the appointment information for a person.
+	 * Optionall provide a committee to limit the appointment information
+	 * @param Committee $committee
+	 * @return AppointerList
+	 */
+	public function getAppointers(Committee $committee=null)
+	{
+		$search = array('person_id'=>$this->id);
+		if ($committee) {
+			$search['committee_id'] = $committee->getId();
+		}
+		return new AppointerList($search);
+	}
 }

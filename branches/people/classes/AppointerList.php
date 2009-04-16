@@ -28,7 +28,7 @@ class AppointerList extends PDOResultIterator
 	 */
 	public function __construct($fields=null)
 	{
-		$this->select = 'select appointers.id as id from appointers';
+		$this->select = 'select distinct a.id as id from appointers a';
 		if (is_array($fields)) {
 			$this->find($fields);
 		}
@@ -42,7 +42,7 @@ class AppointerList extends PDOResultIterator
 	 * @param int $limit
 	 * @param string $groupBy
 	 */
-	public function find($fields=null,$sort='name',$limit=null,$groupBy=null)
+	public function find($fields=null,$sort='a.name',$limit=null,$groupBy=null)
 	{
 		$this->sort = $sort;
 		$this->limit = $limit;
@@ -53,20 +53,33 @@ class AppointerList extends PDOResultIterator
 		$parameters = array();
 
 		if (isset($fields['id'])) {
-			$options[] = 'id=:id';
+			$options[] = 'a.id=:id';
 			$parameters[':id'] = $fields['id'];
 		}
 
 		if (isset($fields['name'])) {
-			$options[] = 'name=:name';
+			$options[] = 'a.name=:name';
 			$parameters[':name'] = $fields['name'];
+		}
+
+		if (isset($fields['committee_id'])) {
+			$this->joins['seat_join'] = 'left join seats on a.id=seats.appointer_id';
+			$options[] = 'committee_id=:committee_id';
+			$parameters[':committee_id'] = $fields['committee_id'];
+		}
+
+		if (isset($fields['person_id'])) {
+			$this->joins['seat_join'] = 'left join seats on a.id=seats.appointer_id';
+			$this->joins['term_join'] = 'left join terms on seats.id=terms.seat_id';
+			$options[] = 'person_id=:person_id';
+			$parameters[':person_id'] = $fields['person_id'];
 		}
 
 
 		// Finding on fields from other tables required joining those tables.
 		// You can add fields from other tables to $options by adding the join SQL
 		// to $this->joins here
-
+		$this->joins = implode(' ',$this->joins);
 		$this->populateList($options,$parameters);
 	}
 
