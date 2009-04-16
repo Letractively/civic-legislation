@@ -114,8 +114,10 @@ $userIsAdmin = userHasRole(array('Administrator','Clerk'));
 		?>
 	</table>
 	<div>
-		<a href="<?php echo BASE_URL.'/committees/pastMembers.php?committee_id='.$this->committee->getId(); ?>">
-			View Past Members
-		</a>
+		<?php
+			$url = $this->committee->getURL();
+			$url->members = 'past';
+			echo "<a href=\"$url\">View Past Members</a>";
+		?>
 	</div>
 </div>

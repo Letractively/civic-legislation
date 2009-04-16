@@ -40,4 +40,7 @@
 			}
 		?>
 	</table>
+	<div>
+		<a href="<?php echo $this->committee->getURL(); ?>">View Current Members</a>
+	</div>
 </div>

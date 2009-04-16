@@ -295,11 +295,19 @@ class Committee extends ActiveRecord
 	}
 
 	/**
-	 * @return string
+	 * @return boolean
+	 */
+	public function hasTopics()
+	{
+		return count($this->getTopics()) ? true : false;
+	}
+
+	/**
+	 * @return URL
 	 */
 	public function getURL()
 	{
-		return BASE_URL.'/committees/viewCommittee.php?committee_id='.$this->id;
+		return new URL(BASE_URL.'/committees/viewCommittee.php?committee_id='.$this->id);
 	}
 
 	/**
