@@ -261,4 +261,12 @@ class VotingRecord extends ActiveRecord
 	{
 		return $this->getTerm()->getPerson();
 	}
+
+	/**
+	 * @return VoteType
+	 */
+	public function getVoteType()
+	{
+		return $this->getVote()->getVoteType();
+	}
 }

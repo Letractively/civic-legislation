@@ -27,9 +27,24 @@ if ($this->person->hasVotingRecord()) {
 		}
 		$votingRecords = implode(', ',$votingRecords);
 
+		$lastname = View::escape($this->person->getLastname());
+		$type = View::escape($record->getVoteType());
+		switch ($position) {
+			case 'yes':
+			case 'no':
+				$action = "voted $position";
+				break;
+			case 'absent':
+				$action = "was absent";
+				break;
+			case 'abstain':
+				$action = "abstained";
+				break;
+		}
 		echo "
 		<div class=\"topic\">
-			<h3><span class=\"position\">$position</span> on
+			<h3 class=\"$position\">
+				$lastname $action in a $type vote on
 				<a href=\"{$record->getTopic()->getURL()}\" class=\"number\">$number</a>
 				<span class=\"date\">$date</span>
 			</h3>
