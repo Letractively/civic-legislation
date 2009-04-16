@@ -15,21 +15,6 @@ if ($this->person->hasVotingRecord()) {
 
 	foreach ($this->person->getVotingRecords($fields) as $record) {
 		$position = View::escape($record->getPosition());
-		$number = View::escape($record->getTopic()->getNumber());
-		$date = $record->getDate('n/j/Y');
-		$description = View::escape($record->getTopic()->getDescription());
-
-
-		$votingRecords = array();
-		foreach ($record->getVote()->getVotingRecords() as $vote) {
-			$name = View::escape($vote->getPerson()->getLastname());
-			$name = "<a href=\"{$vote->getPerson()->getURL()}\">$name</a>";
-			$votingRecords[] = "$name:{$vote->getPosition()}";
-		}
-		$votingRecords = implode(', ',$votingRecords);
-
-		$lastname = View::escape($this->person->getLastname());
-		$type = View::escape($record->getVoteType());
 		switch ($position) {
 			case 'yes':
 			case 'no':
@@ -42,6 +27,11 @@ if ($this->person->hasVotingRecord()) {
 				$action = "abstained";
 				break;
 		}
+		$number = View::escape($record->getTopic()->getNumber());
+		$date = $record->getDate('n/j/Y');
+		$description = View::escape($record->getTopic()->getDescription());
+		$lastname = View::escape($this->person->getLastname());
+		$type = View::escape($record->getVoteType());
 		echo "
 		<div class=\"topic\">
 			<h3 class=\"$position\">
@@ -51,8 +41,23 @@ if ($this->person->hasVotingRecord()) {
 			</h3>
 			<p>$description</p>
 		";
-		if($votingRecords) {
-			echo "<div>$votingRecords</div>";
+
+
+
+		$votingRecords = array();
+		foreach ($record->getVote()->getVotingRecords() as $vote) {
+			$name = View::escape($vote->getPerson()->getLastname());
+			$votingRecords[$vote->getPosition()][] = "<a href=\"{$vote->getPerson()->getURL()}\">$name</a>";
+		}
+		foreach ($votingRecords as $position=>$names) {
+			$votingRecords[$position] = implode(', ',$names);
+		}
+		if ($votingRecords) {
+			echo "<div>";
+			foreach ($votingRecords as $position=>$names) {
+				echo "$position($names) ";
+			}
+			echo "</div>";
 		}
 		echo "</div>";
 	}

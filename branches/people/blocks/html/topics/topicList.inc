@@ -34,24 +34,29 @@ if (count($this->topicList) || $userCanEdit) {
 			$date = $topic->getDate('n/j/Y');
 			$description = View::escape($topic->getDescription());
 			$synopsis = View::escape($topic->getSynopsis());
-
-			$votingRecords = array();
-			if ($topic->hasVotes()) {
-				foreach ($topic->getLatestVotingRecords() as $vote) {
-					$name = View::escape($vote->getPerson()->getLastname());
-					$name = "<a href=\"{$vote->getPerson()->getURL()}\">$name</a>";
-					$votingRecords[] = "$name:{$vote->getPosition()}";
-				}
-			}
-			$votingRecords = implode(', ',$votingRecords);
-
 			echo "
 			<div class=\"topic\">
 				<h3>$editButton <a href=\"{$topic->getURL()}\">$number</a> <span style=\"font-size:.8em;\"> $date</span></h3>
 				<p>$description</p>
 			";
-			if ($votingRecords) {
-				echo "<div>$votingRecords</div>";
+
+
+			$votingRecords = array();
+			if ($topic->hasVotes()) {
+				foreach ($topic->getLatestVotingRecords() as $vote) {
+					$name = View::escape($vote->getPerson()->getLastname());
+					$votingRecords[$vote->getPosition()][] = "<a href=\"{$vote->getPerson()->getURL()}\">$name</a>";
+				}
+				foreach ($votingRecords as $position=>$names) {
+					$votingRecords[$position] = implode(', ',$names);
+				}
+				if ($votingRecords) {
+					echo "<div>";
+					foreach ($votingRecords as $position=>$names) {
+						echo "$position($names) ";
+					}
+					echo "</div>";
+				}
 			}
 			echo "</div>";
 		}
