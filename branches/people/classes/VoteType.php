@@ -8,6 +8,7 @@ class VoteType extends ActiveRecord
 {
 	private $id;
 	private $name;
+	private $ordering;
 
 	/**
 	 * This will load all fields in the table as properties of this class.
@@ -35,9 +36,11 @@ class VoteType extends ActiveRecord
 		else {
 			// This is where the code goes to generate a new, empty instance.
 			// Set any default values for properties that need it here
+			$max = self::getMaxOrdering();
+			$this->ordering = $max++;
 		}
 	}
-	
+
 	/**
 	 * Throws an exception if anything's wrong
 	 * @throws Exception $e
@@ -47,6 +50,11 @@ class VoteType extends ActiveRecord
 		// Check for required fields here.  Throw an exception if anything is missing.
 		if (!$this->name) {
 			throw new Exception('missingName');
+		}
+
+		if (!$this->ordering) {
+			$max = self::getMaxOrdering();
+			$this->ordering = $max++;
 		}
 	}
 
@@ -63,6 +71,7 @@ class VoteType extends ActiveRecord
 
 		$fields = array();
 		$fields['name'] = $this->name;
+		$fields['ordering'] = $this->ordering;
 
 		// Split the fields up into a preparedFields array and a values array.
 		// PDO->execute cannot take an associative array for values, so we have
@@ -122,6 +131,14 @@ class VoteType extends ActiveRecord
 		return $this->name;
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getOrdering()
+	{
+		return $this->ordering;
+	}
+
 	//----------------------------------------------------------------
 	// Generic Setters
 	//----------------------------------------------------------------
@@ -132,6 +149,14 @@ class VoteType extends ActiveRecord
 	public function setName($string)
 	{
 		$this->name = trim($string);
+	}
+
+	/**
+	 * @param int $int
+	 */
+	public function setOrdering($int)
+	{
+		$this->ordering = preg_replace('/[^0-9]/','',$int);
 	}
 
 
@@ -145,5 +170,28 @@ class VoteType extends ActiveRecord
 	public function __toString()
 	{
 		return $this->name;
+	}
+
+	/**
+	 * @return int
+	 */
+	public static function getMaxOrdering()
+	{
+		$pdo = Database::getConnection();
+		$query = $pdo->query('select max(ordering) as max from voteTypes');
+		$result = $query->fetchAll();
+		return $result[0]['max'];
+	}
+
+	/**
+	 * Returns the last vote type in the sequence, as determined by the ordering
+	 * @return VoteType
+	 */
+	public static function getFinalVoteType()
+	{
+		$pdo = Database::getConnection();
+		$query = $pdo->query('select id from voteTypes order by ordering desc limit 1');
+		$result = $query->fetchAll();
+		return new VoteType($result[0]['id']);
 	}
 }

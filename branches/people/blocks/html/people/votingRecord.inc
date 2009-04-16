@@ -10,7 +10,9 @@ if ($this->person->hasVotingRecord()) {
 	<div class=\"interfaceBox memberVR\">
 		<h1>Voting Record</h1>
 	";
-	foreach ($this->person->getVotingRecords() as $record) {
+
+	$fields = array('voteType'=>VoteType::getFinalVotetype());
+	foreach ($this->person->getVotingRecords($fields) as $record) {
 		$position = View::escape($record->getPosition());
 		$number = View::escape($record->getTopic()->getNumber());
 		$date = $record->getDate('n/j/Y');

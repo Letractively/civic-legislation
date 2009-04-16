@@ -16,7 +16,11 @@
 				<td><input name="voteType[name]" id="voteType-name" value="<?php echo View::escape($this->voteType->getName()); ?>" />
 				</td>
 			</tr>
-				
+			<tr><td><label for="voteType-ordering" class="required">Order</label></td>
+				<td><input name="voteType[ordering]" id="voteType-ordering" value="<?php echo $this->voteType->getOrdering(); ?>" />
+				</td>
+			</tr>
+
 		</table>
 
 		<button type="submit" class="submit">Submit</button>

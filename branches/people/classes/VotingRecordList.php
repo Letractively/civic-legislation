@@ -28,7 +28,7 @@ class VotingRecordList extends PDOResultIterator
 	 */
 	public function __construct($fields=null)
 	{
-		$this->select = 'select vr.id as id from votingRecords vr';
+		$this->select = 'select distinct vr.id as id from votingRecords vr';
 		if (is_array($fields)) {
 			$this->find($fields);
 		}
@@ -86,7 +86,13 @@ class VotingRecordList extends PDOResultIterator
 			$this->joins.= ' left join topics on v.topic_id=topics.id';
 			$type = $fields['topicType'];
 			$options[] = 'topics.topicType_id=:topicType_id';
-			$parameters['topicType_id'] = $type->getId();
+			$parameters[':topicType_id'] = $type->getId();
+		}
+
+		if (isset($fields['voteType'])) {
+			$this->joins.= ' left join votes on vr.vote_id=v.id';
+			$options[] = 'v.voteType_id=:voteType_id';
+			$parameters[':voteType_id'] = $fields['voteType']->getId();
 		}
 
 		$this->populateList($options,$parameters);

@@ -151,7 +151,9 @@ create table topics (
 
 create table voteTypes (
 	id int unsigned not null primary key auto_increment,
-	name varchar(128) not null
+	name varchar(128) not null,
+	ordering tinyint unsigned not null,
+	unique (ordering)
 ) engine=InnoDB;
 
 create table votes (

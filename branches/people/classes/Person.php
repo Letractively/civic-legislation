@@ -597,11 +597,16 @@ class Person extends ActiveRecord
 	}
 
 	/**
+	 * @param array $fields Any extra search fields to use to create the list
 	 * @return VotingRecordList
 	 */
-	public function getVotingRecords()
+	public function getVotingRecords($fields=null)
 	{
-		return new VotingRecordList(array('person_id'=>$this->id));
+		$search = array('person_id'=>$this->id);
+		if (is_array($fields)) {
+			$search = array_merge($search,$fields);
+		}
+		return new VotingRecordList($search);
 	}
 
 	/**

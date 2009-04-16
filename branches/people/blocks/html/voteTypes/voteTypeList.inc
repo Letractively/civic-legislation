@@ -18,7 +18,8 @@
 		?>
 		VoteTypes
 	</h1>
-	<ul><?php
+	<table>
+		<?php
 			foreach ($this->voteTypeList as $voteType) {
 				$editButton = '';
 				if (userHasRole('Administrator')) {
@@ -26,9 +27,14 @@
 					$url->voteType_id = $voteType->getId();
 					$editButton = "<a class=\"edit button\" href=\"$url\">Edit</a>";
 				}
+
 				$name = View::escape($voteType->getName());
-				echo "<li>$editButton $name</li>";
+				echo "
+				<tr><th>$editButton{$voteType->getOrdering()}</th>
+					<td>$name</td>
+				</tr>
+				";
 			}
 		?>
-	</ul>
+	</table>
 </div>

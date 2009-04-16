@@ -42,7 +42,7 @@ class VoteTypeList extends PDOResultIterator
 	 * @param int $limit
 	 * @param string $groupBy
 	 */
-	public function find($fields=null,$sort='name',$limit=null,$groupBy=null)
+	public function find($fields=null,$sort='ordering',$limit=null,$groupBy=null)
 	{
 		$this->sort = $sort;
 		$this->limit = $limit;
@@ -60,6 +60,11 @@ class VoteTypeList extends PDOResultIterator
 		if (isset($fields['name'])) {
 			$options[] = 'name=:name';
 			$parameters[':name'] = $fields['name'];
+		}
+
+		if (isset($fields['ordering'])) {
+			$options[] = 'ordering=:ordering';
+			$parameters[':ordering'] = $fields['ordering'];
 		}
 
 
