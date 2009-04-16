@@ -4,14 +4,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
  * @author Cliff Ingham <inghamn@bloomington.in.gov>
  * @param Person $this->person
+ * @param VoteType $this->voteType
  */
+$fields = $this->voteType ? array('voteType'=>$this->voteType) : null;
 if ($this->person->hasVotingRecord()) {
 	echo "
 	<div class=\"interfaceBox memberVR\">
 		<h1>Voting Record</h1>
 	";
 
-	$fields = array('voteType'=>VoteType::getFinalVotetype());
 	foreach ($this->person->getVotingRecords($fields) as $record) {
 		$position = View::escape($record->getPosition());
 		$number = View::escape($record->getTopic()->getNumber());
@@ -20,7 +21,7 @@ if ($this->person->hasVotingRecord()) {
 
 
 		$votingRecords = array();
-		foreach ($record->getTopic()->getLatestVotingRecords() as $vote) {
+		foreach ($record->getVote()->getVotingRecords() as $vote) {
 			$name = View::escape($vote->getPerson()->getLastname());
 			$name = "<a href=\"{$vote->getPerson()->getURL()}\">$name</a>";
 			$votingRecords[] = "$name:{$vote->getPosition()}";
